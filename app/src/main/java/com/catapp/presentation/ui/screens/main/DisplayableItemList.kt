@@ -94,7 +94,11 @@ private fun Title(displayableItem: DisplayableItem?) {
             .padding(dimensionResource(R.dimen.padding_medium))
     ) {
         Text(
-            text = displayableItem?.owner ?: stringResource(R.string.loading_string),
+            text = if (displayableItem?.owner.isNullOrEmpty() || displayableItem?.owner == "null") {
+                stringResource(R.string.unknown_string)
+            } else {
+                displayableItem?.owner!!
+            },
             style = MaterialTheme.typography.titleLarge
         )
     }
