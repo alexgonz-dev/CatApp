@@ -27,10 +27,14 @@ class DisplayableItemListViewModel @Inject constructor(
 
 
     val result: MutableState<List<DisplayableItem>> = mutableStateOf(emptyList())
-    val resultImages: MutableState<Map<String, ByteArray?>> = mutableStateOf(emptyMap())
+    val resultImage: MutableState<ByteArray?> = mutableStateOf(null)
 
     fun getDisplayableItemsAsFlow(): Flow<List<DisplayableItem>> = flow {
         emit(getDisplayableItems() ?: emptyList())
+    }
+
+    fun getDisplayableImageItemAsFlow(item: DisplayableItem?): Flow<ByteArray?> = flow {
+        emit(updateImage(item))
     }
 
     private suspend fun getDisplayableItems(): List<DisplayableItem>? {
@@ -45,12 +49,12 @@ class DisplayableItemListViewModel @Inject constructor(
         return config
     }
 
-    suspend fun updateImage(item: DisplayableItem) {
-        viewModelScope.launch {
-            resultImages.value = resultImages.value.toMutableMap().apply {
-                put(item.id, getDisplayableItemImageUseCase.loadItemImage(item).getOrNull())
+    suspend fun updateImage(item: DisplayableItem?): ByteArray? {
+        return viewModelScope.async {
+            withContext(Dispatchers.IO) {
+                getDisplayableItemImageUseCase.loadItemImage(item).getOrNull()
             }
-        }
+        }.await()
     }
 
     private suspend fun getConfiguration(): String? {

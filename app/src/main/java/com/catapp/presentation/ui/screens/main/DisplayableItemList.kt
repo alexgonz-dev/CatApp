@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -67,17 +68,17 @@ fun MediaListItem(
     modifier: Modifier = Modifier
 ) {
     val viewModel: DisplayableItemListViewModel = hiltViewModel()
+
     LaunchedEffect(Unit) {
-        viewModel.result.value = viewModel.getDisplayableItemsAsFlow()
+        viewModel.resultImage.value = viewModel.getDisplayableImageItemAsFlow(displayableItem)
             .single()
-        displayableItem?.let { viewModel.updateImage(it) }
     }
 
     Card(
         modifier = modifier.clickable { onClick() }
     ) {
         Column {
-            Thumb(model = viewModel.resultImages.value[displayableItem?.id])
+            Thumb(model = viewModel.resultImage)
             Title(displayableItem = displayableItem)
         }
     }

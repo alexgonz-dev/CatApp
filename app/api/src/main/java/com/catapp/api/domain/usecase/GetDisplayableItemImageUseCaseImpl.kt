@@ -41,6 +41,9 @@ class GetDisplayableItemImageUseCaseImpl @Inject constructor(
                             R.string.processed_log
                         )
                     )
+
+                    val itemEntity = ItemEntity(item.id, data)
+                    itemLocalDataSource.saveItem(itemEntity)
                     imageBytes = data
                 },
                 onFailure = { exception ->
@@ -51,11 +54,6 @@ class GetDisplayableItemImageUseCaseImpl @Inject constructor(
                     )
                 }
             )
-
-
-            val itemEntity = ItemEntity(item.id, imageBytes)
-
-            itemLocalDataSource.saveItem(itemEntity)
         } else {
             Log.d(
                 context.getString(R.string.getdisplayableitemimageusecase_Tag), context.getString(
