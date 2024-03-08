@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CatApp</string>
+    <string name="loading_string">Loading...</string>
+</resources>
