@@ -6,6 +6,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
@@ -14,28 +15,38 @@ import com.catapp.R
 import com.catapp.presentation.viewmodel.DetailsScreenViewModel
 import com.catapp.ui.screens.shared.ArrowBackIcon
 import com.catapp.presentation.ui.screens.shared.Thumb
+import com.catapp.presentation.viewmodel.DisplayableItemListViewModel
+import kotlinx.coroutines.flow.single
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreen(
-    viewModel: DetailsScreenViewModel = hiltViewModel(),
     id: String,
     onUpClick: () -> Unit
 ) {
-    val displayableItem by viewModel.getDisplayableItemAsFlow(id).collectAsState(initial = null)
+
+    val viewModel: DetailsScreenViewModel = hiltViewModel()
+
+    LaunchedEffect(Unit) {
+        viewModel.result.value = viewModel.getDisplayableItemAsFlow(id)
+            .single()
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = displayableItem?.owner ?: stringResource(R.string.loading_string))
+                    Text(
+                        text = viewModel.result.value?.first?.owner
+                            ?: stringResource(R.string.loading_string)
+                    )
                 },
                 navigationIcon = { ArrowBackIcon(onUpClick) }
             )
 
         }
     ) {
-        Thumb(item = displayableItem)
+        Thumb(model = viewModel.result.value?.second)
     }
 }

@@ -39,7 +39,7 @@ fun DisplayableItemList(
 
     val viewModel: DisplayableItemListViewModel = hiltViewModel()
 
-    LaunchedEffect(viewModel) {
+    LaunchedEffect(Unit) {
         viewModel.result.value = viewModel.getDisplayableItemsAsFlow()
             .single()
     }
@@ -66,11 +66,18 @@ fun MediaListItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val viewModel: DisplayableItemListViewModel = hiltViewModel()
+    LaunchedEffect(Unit) {
+        viewModel.result.value = viewModel.getDisplayableItemsAsFlow()
+            .single()
+        displayableItem?.let { viewModel.updateImage(it) }
+    }
+
     Card(
         modifier = modifier.clickable { onClick() }
     ) {
         Column {
-            Thumb(item = displayableItem)
+            Thumb(model = viewModel.resultImages.value[displayableItem?.id])
             Title(displayableItem = displayableItem)
         }
     }

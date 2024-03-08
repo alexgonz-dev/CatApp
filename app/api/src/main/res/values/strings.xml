@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="getdisplayableitemimageusecase_Tag">GetDisplayableItemImageUseCase</string>
+    <string name="item_id_log">"item.id "</string>
+    <string name="notfound_log">notFound</string>
+    <string name="processed_log">processed</string>
+    <string name="found_log">Found</string>
+</resources>

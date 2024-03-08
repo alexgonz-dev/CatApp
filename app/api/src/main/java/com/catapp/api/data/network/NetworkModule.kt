@@ -23,6 +23,7 @@ object NetworkModule {
         val client = OkHttpClient.Builder()
             .readTimeout(30, TimeUnit.SECONDS) // Read timeout
             .connectTimeout(30, TimeUnit.SECONDS) // Connect timeout
+            .retryOnConnectionFailure(true)
             .build()
 
         return Retrofit.Builder()
